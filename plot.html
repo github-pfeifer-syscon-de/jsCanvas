@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+-->
+<html>
+    <head>
+        <title>Plot</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/mathjs@10.0.1/lib/browser/math.js"></script>
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/Axis.js"></script>
+        <script src="js/Plot.js"></script>
+        <script src="js/ColorSelection.js"></script>
+        <script src="js/Util.js"></script>
+    </head>
+    <body>
+        <p>
+            <a href="plot.html">Function</a>
+            &nbsp;
+            <a href="mandel.html">Mandelbrot </a>
+        </p>
+        <p>
+        <canvas id="canvas" style="width: 50vw; height: 50vh;"></canvas>
+        </p>
+        <form id="form">
+        <table>
+            <tr>
+                <td>
+                    <label for="min">x-Min:</label>
+                </td>
+                <td>
+                    <input type="number" id="min" value="-10" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="max">x-Max:</label>
+                </td>
+                <td>
+                    <input type="number" id="max" value="10" /><br/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="eq">Equation:</label>
+                </td>
+                <td>
+                    <input type="text" id="eq" value="4 * sin(x) + 5 * cos(x/2)" /><br/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="color1">Background:</label>
+                </td>
+                <td id="colorBg">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <input type="submit" value="Draw" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <button id="download">Download</button>
+                </td>
+            </tr>
+        </table>
+        </form>
+        <script>
+
+            function drawPlot() {
+                try {
+                    let plot = new Plot("#canvas");
+                    let colorElementBg = document.querySelector("#colorBg");
+                    plot.backgroundColor = colorElementBg.getAttribute("color");
+                    const expression = document.getElementById('eq').value;
+                    var xmin = Number.parseFloat(document.getElementById('min').value);
+                    var xmax = Number.parseFloat(document.getElementById('max').value);
+                    plot.draw(xmin,xmax,expression);
+                } catch (err) {
+                    console.error(err);
+                    alert(err);
+                }
+            }
+       
+            document.getElementById('form').onsubmit = function (event) {
+                event.preventDefault();
+                drawPlot();
+            };
+            let colorSelectionBg = new ColorSelection("colorBg", "#eeeeee", drawPlot);
+            // draw default
+            drawPlot();
+
+            canvasDownload("download","#canvas","png");
+        </script>
+    </body>
+</html>

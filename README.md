@@ -1,2 +1,7 @@
 # jsCanvas
-my experiments with js canvas (a function plot and mandelbrot set)
+my experiments with js canvas
+
+<ul>
+<li>a function plot
+<li>a mandelbrot set
+</ul>

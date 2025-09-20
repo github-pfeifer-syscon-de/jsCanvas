@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!--
+-->
+<html>
+    <head>
+        <title>Mandelbrot</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/Fract.js"></script>
+        <script src="js/ColorSelection.js"></script>
+        <script src="js/Util.js"></script>
+    </head>
+    <body>
+        <p>
+            <a href="plot.html">Function</a>
+            &nbsp;
+            <a href="mandel.html">Mandelbrot </a>
+        </p>
+        <canvas id="canvas" style="width: 50vw; height: 50vw;"></canvas>
+        <form id="form">
+        <table>
+            <tr>
+                <td>
+                    <label for="depth">Depth:</label>
+                </td>
+                <td>
+                    <input type="range" id="depth" min="128" max="2048" value="128" />
+                    <span id="depthDisplay" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="color1">Primary:</label>
+                </td>
+                <td id="color1">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="color2">Secondary:</label>
+                </td>
+                <td id="color2">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="color3">Ternary:</label>
+                </td>
+                <td id="color3">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Draw" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <button id="download">Download</button>
+                </td>
+            </tr>
+        </table>
+        </form>
+            <p>Click to zoom, with Shift to pan</p>
+        <script>
+            function drawFract() {
+                try {
+                    let fract;
+                    if (typeof(window.fract) === "undefined" || window.fract === null) {
+                        fract = new Fract("#canvas");
+                        window.fract = fract;
+                    }
+                    else {
+                        fract = window.fract;
+                    }
+                    var depth = Number.parseFloat(document.getElementById("depth").value);
+                    let colors = [];
+                    let colorElement1 = document.querySelector("#color1");
+                    colors.push(colorElement1.getAttribute("color"));
+                    let colorElement2 = document.querySelector("#color2");
+                    colors.push(colorElement2.getAttribute("color"));
+                    let colorElement3 = document.querySelector("#color3");
+                    colors.push(colorElement3.getAttribute("color"));
+
+                    fract.draw(depth,colors);
+                } catch (err) {
+                    console.error(err);
+                    alert(err);
+                }
+            }
+            
+            function init() {
+                let colorSelection1 = new ColorSelection("color1", "#ff0000", drawFract);
+                let colorSelection2 = new ColorSelection("color2", "#00ff00", drawFract);
+                let colorSelection3 = new ColorSelection("color3", "#0000ff", drawFract);
+                canvasDownload("download","#canvas","png");
+                var depth = document.getElementById("depth");
+                depth.addEventListener("change", (e)=> {
+                    let depthDisplay = document.getElementById("depthDisplay");
+                    depthDisplay.innerHTML = e.target.value;
+                    drawFract();
+                });
+            }
+
+            document.getElementById('form').onsubmit = function (event) {
+                event.preventDefault();
+                drawFract();
+            };
+            init();
+            // draw default
+            drawFract();
+        </script>
+
+    </body>
+</html>
